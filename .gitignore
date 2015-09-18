@@ -1,6 +1,7 @@
 
 .project
 .vagrant
+Vagrantfile
 puppet/Puppetfile.lock
 puppet/modules
 puppet/.tmp

@@ -8,9 +8,8 @@ forge "https://forgeapi.puppetlabs.com"
 
 # Puppet Supported Modules
 # https://forge.puppetlabs.com/supported
-mod 'puppetlabs/ntp'
-mod 'puppetlabs/firewall'
 mod 'puppetlabs/stdlib'
+mod 'puppetlabs/firewall'
 mod 'puppetlabs/java'
 #mod 'puppetlabs/apache'
 #mod 'puppetlabs/concat'

@@ -1,0 +1,29 @@
+
+File { ignore => '.svn',
+  source_permissions => ignore,
+  backup => false,
+}
+
+Package {
+  allow_virtual => false,
+}
+
+Exec {
+  path => '/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin',
+}
+
+service { 'firewalld' :
+  ensure => stopped,
+  enable => false,
+}
+
+<% if jdkpkg and !jdkpkg.empty? %>
+package { 'java' :
+  ensure   => 'installed',
+  source   => '/vagrant/puppet/files/<%= File.basename(jdkpkg) %>',
+  provider => 'rpm',
+}
+<% else %>
+class { 'java' : }
+<% end %>
+
