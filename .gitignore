@@ -3,6 +3,5 @@
 .vagrant
 Vagrantfile
 puppet/Puppetfile.lock
-puppet/modules
 puppet/.tmp
 puppet/.librarian

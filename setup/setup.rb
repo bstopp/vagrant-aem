@@ -28,8 +28,10 @@ def readParams(file)
   end
 end
 
-def writeParams(params = OpenStruct.new, file = PARAMS_FILE)
+def writeParams(params, file)
 
+  params ||= OpenStruct.new
+  file ||= PARAMS_FILE
   File.open(file, FILE_MODES, 0644) do |f|
     f.write("#{params.to_h.to_json}\n")
   end
