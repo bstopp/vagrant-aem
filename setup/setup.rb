@@ -90,3 +90,8 @@ copyFile(params[:jdkpkg]) unless params[:jdkpkg].nil? or params[:jdkpkg].empty?
 
 copyFile(params[:aemjar])
 
+# Make sure vbguest plugin exists
+`vagrant plugin install vagrant-vbguest`
+if $?.to_i != 0
+  puts "Unable to install vbguest plugin, errors may occur with VirtualBox Guest pluings."
+end

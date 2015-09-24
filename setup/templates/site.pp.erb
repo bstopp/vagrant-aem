@@ -23,7 +23,57 @@ package { 'java' :
   source   => '/vagrant/puppet/files/<%= File.basename(jdkpkg) %>',
   provider => 'rpm',
 }
+
+Package['java'] ->
+File['/opt/aem'] ->
+Aem::Instance <| |>
+
 <% else %>
+
 class { 'java' : }
+
+Class['java'] ->
+File['/opt/aem'] ->
+Aem::Instance <| |>
+
 <% end %>
 
+file { '/opt/aem': 
+  ensure => directory,
+  owner  => 'vagrant',
+  group  => 'vagrant',
+}
+
+/*
+aem::instance { 'author' :
+  debug_port      => 30303,
+  group           => 'vagrant',
+  home            => '/opt/aem/author',
+  jvm_mem_opts    => '-Xmx2048m',
+  manage_group    => false,
+  manage_user     => false,
+  port            => 4502,
+  runmodes        => ['localdev', 'local'],
+  sample_content  => false,
+  source          => '/vagrant/puppet/files/<%= File.basename(aemjar) %>',
+  type            => 'author',
+  user            => 'vagrant',
+  version         => '6.1.0',
+}
+
+aem::instance { 'publish' :
+  debug_port      => 30304,
+  group           => 'vagrant',
+  home            => '/opt/aem/publish',
+  jvm_mem_opts    => '-Xmx2048m',
+  manage_group    => false,
+  manage_user     => false,
+  port            => 4503,
+  runmodes        => ['localdev', 'local'],
+  sample_content  => false,
+  source          => '/vagrant/puppet/files/<%= File.basename(aemjar) %>',
+  type            => 'publish',
+  user            => 'vagrant',
+  version         => '6.1.0',
+}
+ */

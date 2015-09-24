@@ -25,6 +25,4 @@ mod 'rtyler/jenkins'
 # Other puppetlabs modules
 mod 'puppetlabs/git'
 
-mod 'bstopp/puppet-aem',
-  :git => 'https://github.com/bstopp/puppet-aem.git',
-  :ref => 'master'
+mod 'bstopp/aem',
