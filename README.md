@@ -77,6 +77,7 @@ This is an example of a file which shows format and parameters:
   "client" : "test",
   "jdk_pkg" : "",
   "aem_jar" : "/path/to/aem-quickstart-6.1.jar",
+  "aem_license" : "your license here",
   "dispatcher_mod" : "/path/to/dispatcher-apache2.4-4.1.10.so",
   "dispatcher_any" : ""
 }
