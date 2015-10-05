@@ -47,7 +47,7 @@ def getParameters(param_file)
 
   if params.client.nil? || params.client.empty?
     print 'Client name: '
-    params.client = gets.chomp
+    params.client = gets.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
   end
 
   if params.jdk_pkg.nil?
