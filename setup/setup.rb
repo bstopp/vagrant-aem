@@ -60,6 +60,11 @@ def getParameters(param_file)
     params.aem_jar = gets.chomp
   end
 
+  if params.aem_license.nil? || params.aem_license.empty?
+    print 'AEM License Key: '
+    params.aem_license = gets.chomp
+  end
+
   if params.dispatcher_mod.nil? || params.dispatcher_mod.empty?
     print 'Path to Dispatcher Module file: '
     params.dispatcher_mod = gets.chomp

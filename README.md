@@ -125,6 +125,10 @@ Optional. This specifies the package to use when installing the JDK. If not prov
 
 **Required**. This specifies the location of the AEM installation jar. This file is not provided as part of this project, and must be provided by the consumer. Format: fully qualified path to file.
 
+##### `aem_license`
+
+**Required**. This is the license for running the AEM system. Format: String.
+
 ##### `dispatcher_mod`
 
 **Required**. This specifies the location of the AEM installation jar. This file is not provided as part of this project, and must be provided by the consumer. Format: fully qualified path to file.
@@ -203,4 +207,4 @@ Debugging is enabled by default on the Author system, connect using port 30304.
 
 This project was the driver behind the Puppet AEM module. As new features are added to that module, this project will be updated to incorporate their use for standarization of environments.
 
-Contributions are always welcome, however please ensure that no AEM Quickstar jar files are included in pull requests.
+Contributions are always welcome, however please ensure that no AEM Quickstar jars or license keys are included in pull requests.
