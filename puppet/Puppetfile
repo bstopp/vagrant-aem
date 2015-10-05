@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+#^syntax detection
+
+forge "https://forgeapi.puppetlabs.com"
+
+# use dependencies defined in Modulefile
+#modulefile
+
+# Puppet Supported Modules
+# https://forge.puppetlabs.com/supported
+mod 'puppetlabs/stdlib'
+mod 'puppetlabs/firewall'
+mod 'puppetlabs/java'
+mod 'puppetlabs/apache'
+
+#mod 'puppetlabs/concat'
+#mod 'puppetlabs/inifile'
+#mod 'puppetlabs/tomcat'
+
+# Puppet Approved Modules
+# https://forge.puppetlabs.com/approved
+mod 'maestrodev/wget'
+mod 'rodjek/logrotate'
+mod 'rtyler/jenkins'
+
+mod 'bstopp-aem',
+  :git => 'http://github.com/bstopp/puppet-aem.git',
+  :ref => '2.1.0'
