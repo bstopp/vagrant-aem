@@ -1,8 +1,6 @@
 # Default settings
 File { ignore => '.svn',
   source_permissions => ignore,
-  owner              => 'vagrant',
-  group              => 'vagrant',
   backup             => false,
 }
 
@@ -188,3 +186,22 @@ aem::instance { 'publish' :
   version         => '6.1.0',
   require         => File['/opt/aem'],
 }
+
+aem::license { 'author' :
+  customer    => '<%= client %>',
+  group       => 'vagrant',
+  home        => '/opt/aem/author',
+  license_key => '<%= aem_license %>',
+  user        => 'vagrant',
+  version     => '6.1.0',
+}
+
+aem::license { 'publish' :
+  customer    => '<%= client %>',
+  group       => 'vagrant',
+  home        => '/opt/aem/publish',
+  license_key => '<%= aem_license %>',
+  user        => 'vagrant',
+  version     => '6.1.0',
+}
+

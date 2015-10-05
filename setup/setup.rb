@@ -47,7 +47,7 @@ def getParameters(param_file)
 
   if params.client.nil? || params.client.empty?
     print 'Client name: '
-    params.client = gets.chomp
+    params.client = gets.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
   end
 
   if params.jdk_pkg.nil?
@@ -58,6 +58,11 @@ def getParameters(param_file)
   if params.aem_jar.nil? || params.aem_jar.empty?
     print 'Path to AEM installer jar: '
     params.aem_jar = gets.chomp
+  end
+
+  if params.aem_license.nil? || params.aem_license.empty?
+    print 'AEM License Key: '
+    params.aem_license = gets.chomp
   end
 
   if params.dispatcher_mod.nil? || params.dispatcher_mod.empty?
