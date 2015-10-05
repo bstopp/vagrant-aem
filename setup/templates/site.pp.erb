@@ -1,7 +1,9 @@
-
+# Default settings
 File { ignore => '.svn',
   source_permissions => ignore,
-  backup => false,
+  owner              => 'vagrant',
+  group              => 'vagrant',
+  backup             => false,
 }
 
 Package {
@@ -17,26 +19,135 @@ service { 'firewalld' :
   enable => false,
 }
 
-<% if jdkpkg and !jdkpkg.empty? %>
-package { 'java' :
-  ensure   => 'installed',
-  source   => '/vagrant/puppet/files/<%= File.basename(jdkpkg) %>',
-  provider => 'rpm',
+# Apahe Configurations
+
+$apache_dirs = [ '/var/www',
+                 '/var/www/vhosts', ]
+
+file { $apache_dirs :
+  ensure => directory,
+  owner  => 'root',
+  group  => 'root',
+  mode   => '0775',
+  before => Class['apache'],
 }
 
-Package['java'] ->
-File['/opt/aem'] ->
-Aem::Instance <| |>
+class { 'apache' : 
+  default_confd_files => false,
+  default_mods        => false,
+  default_vhost       => false,
+  purge_vhost_dir     => true,
+  vhost_dir           => '/etc/httpd/vhost.d',
+}
+
+file { "${::apache::httpd_dir}/${::apache::lib_path}/<%= File.basename(dispatcher_mod) %>" : 
+  ensure  => file,
+  backup  => false,
+  group   => 'root',
+  owner   => 'root',
+  replace => true,
+  source  => '/vagrant/puppet/files/<%= File.basename(dispatcher_mod) %>',
+  require => Class['apache'],
+  notify  => Class['apache::service'],
+}
+
+file { 'mod_dispatcher.so' :
+  path    => "${::apache::httpd_dir}/${::apache::lib_path}/mod_dispatcher.so",
+  ensure  => "${::apache::httpd_dir}/${::apache::lib_path}/<%= File.basename(dispatcher_mod) %>",
+  group   => 'root',
+  replace => true,
+  owner   => 'root',
+  require => Class['apache'],
+  notify  => Class['apache::service'],
+}
+
+file { "${::apache::confd_dir}/dispatcher.conf" :
+  ensure  => file,
+  group   => 'root',
+  replace => true,
+  owner   => 'root',
+  content => template('/vagrant/puppet/files/dispatcher.conf.erb'),
+  require => Class['apache'],
+  notify  => Class['apache::service'],
+}
+
+file { "${::apache::confd_dir}/dispatcher.any" :
+  ensure  => file,
+  group   => 'root',
+  replace => true,
+  owner   => 'root',
+  source  => '/vagrant/puppet/files/dispatcher.any',
+  require => Class['apache'],
+  notify  => Class['apache::service'],
+}
+
+include apache::mod::rewrite
+include apache::mod::deflate
+
+class { 'apache::mod::info' :
+  restrict_access => false,
+}
+
+apache::mod { 'dispatcher' :
+  path => '/vagrant/puppet/files/<%= File.basename(dispatcher_mod) %>',
+}
+
+apache::vhost { 'jenkins.localhost' :
+  docroot     => '/var/www/vhosts/jenkins',
+  port        => '80',
+}
+
+apache::vhost { 'author.localhost' :
+  docroot     => '/var/www/vhosts/author',
+  port        => '80',
+  proxy_pass  => [
+    { 'path' => '/', 'url' => 'http://localhost:4502/' }
+  ]
+}
+
+apache::vhost { 'publish.localhost' :
+  docroot     => '/var/www/vhosts/publish',
+  port        => '80',
+  proxy_pass  => [
+    { 'path' => '/', 'url' => 'http://localhost:4503/' }
+  ]
+}
+
+apache::vhost { '<%= client %>.localhost' :
+  custom_fragment => '
+
+  <IfModule disp_apache2.c>
+    SetHandler dispatcher-handler
+  </IfModule>
+',
+  default_vhost   => true,
+  docroot         => '/var/www/vhosts/<%= client %>',
+  port            => '80',
+#  proxy_pass      => [],
+  request_headers => ['unset Authorization'],
+#  rewrites        => [],
+}
+
+
+# Java Configurations
+
+<% if jdk_pkg and !jdk_pkg.empty? %>
+package { 'java' :
+  ensure   => 'installed',
+  source   => '/vagrant/puppet/files/<%= File.basename(jdk_pkg) %>',
+  provider => 'rpm',
+  before   => File['/opt/aem'],
+}
 
 <% else %>
 
-class { 'java' : }
-
-Class['java'] ->
-File['/opt/aem'] ->
-Aem::Instance <| |>
+class { 'java' : 
+  before   => File['/opt/aem'],
+}
 
 <% end %>
+
+# AEM Configurations
 
 file { '/opt/aem': 
   ensure => directory,
@@ -44,7 +155,6 @@ file { '/opt/aem':
   group  => 'vagrant',
 }
 
-/*
 aem::instance { 'author' :
   debug_port      => 30303,
   group           => 'vagrant',
@@ -55,10 +165,11 @@ aem::instance { 'author' :
   port            => 4502,
   runmodes        => ['localdev', 'local'],
   sample_content  => false,
-  source          => '/vagrant/puppet/files/<%= File.basename(aemjar) %>',
+  source          => '/vagrant/puppet/files/<%= File.basename(aem_jar) %>',
   type            => 'author',
   user            => 'vagrant',
   version         => '6.1.0',
+  require         => File['/opt/aem'],
 }
 
 aem::instance { 'publish' :
@@ -71,9 +182,9 @@ aem::instance { 'publish' :
   port            => 4503,
   runmodes        => ['localdev', 'local'],
   sample_content  => false,
-  source          => '/vagrant/puppet/files/<%= File.basename(aemjar) %>',
+  source          => '/vagrant/puppet/files/<%= File.basename(aem_jar) %>',
   type            => 'publish',
   user            => 'vagrant',
   version         => '6.1.0',
+  require         => File['/opt/aem'],
 }
- */

@@ -19,9 +19,9 @@ Vagrant.configure('2') do |config|
     puppet.module_path = 'puppet/modules'
   end
 
-  config.vm.network :forwarded_port, guest:80, host:9080
-  config.vm.network :forwarded_port, guest:8080, host:9880
-  config.vm.network :forwarded_port, guest:8009, host:9809
+  config.vm.network :forwarded_port, guest:80, host:10080
+  config.vm.network :forwarded_port, guest:8080, host:18080
+  config.vm.network :forwarded_port, guest:8009, host:18009
   config.vm.network :forwarded_port, guest:4502, host:4502
   config.vm.network :forwarded_port, guest:4503, host:4503
   config.vm.network :forwarded_port, guest:30300, host:30300

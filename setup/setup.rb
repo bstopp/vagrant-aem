@@ -15,6 +15,7 @@ MANIFEST_DIR = File.join(PUPPET_DIR, 'environments', 'local', 'manifests')
 FILE_MODES = File::CREAT | File::TRUNC | File::WRONLY
 VAGRANT_FILE = 'Vagrantfile'
 MANIFEST_FILE = 'site.pp'
+DISPATCHER_FILE = 'dispatcher.any'
 PARAMS_FILE = File.join(SETUP_DIR, 'parameters.json')
 
 def readParams(file)
@@ -44,19 +45,29 @@ def getParameters(param_file)
 
   params = OpenStruct.new unless params
 
-  if params.client.nil?
+  if params.client.nil? || params.client.empty?
     print 'Client name: '
     params.client = gets.chomp
   end
 
-  if params.jdkpkg.nil?
+  if params.jdk_pkg.nil?
     print 'Path to JDK Package (leave blank to use default for OS): '
-    params.jdkpkg = gets.chomp
+    params.jdk_pkg = gets.chomp
   end
 
-  if params.aemjar.nil?
+  if params.aem_jar.nil? || params.aem_jar.empty?
     print 'Path to AEM installer jar: '
-    params.aemjar = gets.chomp
+    params.aem_jar = gets.chomp
+  end
+
+  if params.dispatcher_mod.nil? || params.dispatcher_mod.empty?
+    print 'Path to Dispatcher Module file: '
+    params.dispatcher_mod = gets.chomp
+  end
+
+  if params.dispatcher_any.nil?
+    print 'Custom dispatcher.any file: '
+    params.dispatcher_any = gets.chomp
   end
 
   writeParams(params, param_file)
@@ -86,10 +97,17 @@ params = getParameters(param_file)
 writeTemplate(VAGRANT_FILE, params)
 writeTemplate(MANIFEST_FILE, params, MANIFEST_DIR)
 
-copyFile(params[:jdkpkg]) unless params[:jdkpkg].nil? or params[:jdkpkg].empty?
+if params[:dispatcher_any].nil? or params[:dispatcher_any].empty?
+  writeTemplate(DISPATCHER_FILE, params, FILES_DIR)
+else
+  copyFile(params[:dispatcher_any])
+end
 
-copyFile(params[:aemjar])
+copyFile(params[:jdk_pkg]) unless params[:jdk_pkg].nil? or params[:jdk_pkg].empty?
 
+copyFile(params[:aem_jar])
+copyFile(params[:dispatcher_mod])
+  
 # Make sure vbguest plugin exists
 `vagrant plugin install vagrant-vbguest`
 if $?.to_i != 0

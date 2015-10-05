@@ -11,7 +11,8 @@ forge "https://forgeapi.puppetlabs.com"
 mod 'puppetlabs/stdlib'
 mod 'puppetlabs/firewall'
 mod 'puppetlabs/java'
-#mod 'puppetlabs/apache'
+mod 'puppetlabs/apache'
+
 #mod 'puppetlabs/concat'
 #mod 'puppetlabs/inifile'
 #mod 'puppetlabs/tomcat'
@@ -22,7 +23,6 @@ mod 'maestrodev/wget'
 mod 'rodjek/logrotate'
 mod 'rtyler/jenkins'
 
-# Other puppetlabs modules
-mod 'puppetlabs/git'
-
-mod 'bstopp/aem',
+mod 'bstopp-aem',
+  :git => 'http://github.com/bstopp/puppet-aem.git',
+  :ref => '2.1.0'
