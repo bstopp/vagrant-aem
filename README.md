@@ -5,9 +5,10 @@
 1. [Overview](#overview)
   * [Example Scenarios](#examples)
 1. [Usage](#usage)
+  * [Prerequisites](#prerequisites)
   * [Setup](#setup)
-  * [Vagrant](#vagrant)
   * [Setup Parameters](#setup-parameters)
+  * [Vagrant](#vagrant)
 1. [Host System](#host-system)
   * [System Requirements](#system-requirements)
   * [Cautions](#cautions)
@@ -43,6 +44,18 @@ This is an example for the use of this project, there are two roles in it's use:
 The end result is a standard work environment for the entire team, one that hopefully matches the Development environment. 
 
 ## Usage
+
+### Prerequisites
+
+ **Required**
+  1. AEM Quickstart jar file
+  1. AEM [Dispatcher module](https://www.adobeaemcloud.com/content/companies/public/adobe/dispatcher/dispatcher.html) for your web server
+  1. AEM License Key for your client
+  
+  
+ **Optional**
+  1. Java JDK that is required for your client. [Java](http://www.oracle.com/technetwork/java/index.html) or [OpenJDK](http://openjdk.java.net/)
+  1. Custom dispatcher.any file
 
 ### Setup
 
@@ -83,26 +96,6 @@ This is an example of a file which shows format and parameters:
 
 ~~~
 
-### Vagrant
-
-#### VM Initialization
-
-Once the setup has been accomplished, the vagrant system can be started:
-
-~~~
-> vagrant up
-~~~
-
-This step will take time to run, as it is configuring and setting up all of the software on the guest. 
-
-#### VM Re-provisioning
-
-If there is an update to the setup defintions, then a system reprovision may be required. This is as simple as executing this command while the VM is running:
-
-~~~
-> vagrant provision
-~~~
-
 ### Setup Parameters
 
 The following are the parameters which are needed in order to setup the Vagrant and puppet configuration files. They are propmpted for in the script and used in the JSON parameter file:
@@ -127,16 +120,35 @@ Optional. This specifies the package to use when installing the JDK. If not prov
 
 ##### `aem_license`
 
-**Required**. This is the license for running the AEM system. Format: String.
+**Required**. This is the license key for running the AEM system. Format: String.
 
 ##### `dispatcher_mod`
 
-**Required**. This specifies the location of the AEM installation jar. This file is not provided as part of this project, and must be provided by the consumer. Format: fully qualified path to file.
+**Required**. This specifies the location of the AEM dispatcher module. This file is not provided as part of this project, and must be provided by the consumer. Format: fully qualified path to file.
 
 ##### `dispatcher_any`
 
 Optional. This is a dispatcher.any file which can be specified for use, instead of the [default template](setup/templates/dispatcher.any.erb) Format: fully qualified path to file.
 
+### Vagrant
+
+#### VM Initialization
+
+Once the setup has been accomplished, the vagrant system can be started:
+
+~~~
+> vagrant up
+~~~
+
+This step will take time to run, as it is configuring and setting up all of the software on the guest. 
+
+#### VM Re-provisioning
+
+If there is an update to the setup defintions, then a system reprovision may be required. This is as simple as executing this command while the VM is running:
+
+~~~
+> vagrant provision
+~~~
 
 ## Host System
 
