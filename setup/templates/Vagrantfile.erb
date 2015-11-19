@@ -13,6 +13,7 @@ Vagrant.configure('2') do |config|
   end
 
   config.vm.provision :shell, path: 'setup/update-vm.sh'
+  config.vm.provision :shell, path: 'setup/update-puppet.sh'
   config.vm.provision :puppet do |puppet|
     puppet.environment = 'local'
     puppet.environment_path = 'puppet/environments'
