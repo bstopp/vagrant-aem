@@ -24,4 +24,4 @@ mod 'rodjek/logrotate'
 mod 'rtyler/jenkins'
 
 mod 'bstopp-aem',
-  :git => 'http://github.com/bstopp/puppet-aem.git',
+  :git => 'http://github.com/bstopp/puppet-aem.git'
