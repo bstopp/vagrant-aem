@@ -25,4 +25,3 @@ mod 'rtyler/jenkins'
 
 mod 'bstopp-aem',
   :git => 'http://github.com/bstopp/puppet-aem.git',
-  :ref => '2.1.0'
