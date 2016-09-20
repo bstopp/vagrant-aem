@@ -131,10 +131,12 @@ apache::vhost { '<%= client %>.localhost' :
 
 <% if jdk_pkg and !jdk_pkg.empty? %>
 package { 'java' :
-  ensure   => 'installed',
-  source   => '/vagrant/puppet/files/<%= File.basename(jdk_pkg) %>',
-  provider => 'rpm',
-  before   => File['/opt/aem'],
+  ensure          => 'installed',
+  source          => '/vagrant/puppet/files/<%= File.basename(jdk_pkg) %>',
+  provider        => 'rpm',
+  before          => File['/opt/aem'],
+  install_options => '--replacepkgs'
+
 }
 
 <% else %>
