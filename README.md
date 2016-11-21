@@ -47,6 +47,11 @@ The end result is a standard work environment for the entire team, one that hope
 
 ### Prerequisites
 
+ **Supporting Software**
+ 1. Vagrant (v1.8.4)
+   1. Do not use v1.8.5; it has an [issue when updating the authorized keys](https://github.com/mitchellh/vagrant/issues/7610).
+
+
  **Required**
   1. AEM Quickstart jar file
   1. AEM [Dispatcher module](https://www.adobeaemcloud.com/content/companies/public/adobe/dispatcher/dispatcher.html) for your web server
@@ -90,6 +95,7 @@ This is an example of a file which shows format and parameters:
   "client" : "test",
   "jdk_pkg" : "",
   "aem_jar" : "/path/to/aem-quickstart-6.1.jar",
+  "aem_license" : "your license here",
   "dispatcher_mod" : "/path/to/dispatcher-apache2.4-4.1.10.so",
   "dispatcher_any" : ""
 }
