@@ -112,7 +112,7 @@ copyFile(params[:jdk_pkg]) unless params[:jdk_pkg].nil? or params[:jdk_pkg].empt
 
 copyFile(params[:aem_jar])
 copyFile(params[:dispatcher_mod])
-  
+
 # Make sure vbguest plugin exists
 `vagrant plugin install vagrant-vbguest`
 if $?.to_i != 0

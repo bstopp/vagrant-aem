@@ -1,21 +1,30 @@
 require_relative '../api'
 
-class VirtualBox < Option
+class VirtualBox < VagrantAem::Option
+
+  priority = 1
 
   attr_accessor :selected
   attr_accessor :os_options
 
   def initialize
     @os_options = Array.new
-    @os_options << CentOS70.new
     @os_options << CentOS72.new
-    @os_options << Debian82.new
+    @os_options << Debian7.new
+    @os_options << Debian8.new
     @os_options << Ubuntu14.new
-    
+    @os_options << Ubuntu16.new
+
   end
 
   def name
     'VirtualBox'
+  end
+
+  def parse(opts)
+    @os_options.each do | os |
+      @selected = os if os.match?(opts)
+    end
   end
 
   def prompt
@@ -43,57 +52,57 @@ end
 class GuestOS
 
   attr_accessor :display_name
-  attr_accessor :platform
   attr_accessor :box
-  attr_accessor :box_url
 
+  def match(opts)
+
+  end
 
   def populate(hash)
     data = Hash.new
     data[:name] = display_name
-    data[:platform] = platform
     data[:box] = box
-    data[:box_url] = box_url
     hash[:vagrantbox] = data
     hash[:provider] = 'virtualbox'
   end
 
 end
 
-class CentOS70 < GuestOS
-
-  def initialize
-    @display_name = 'CentOS 7.0'
-    @platform = 'el-7-x86_64'
-    @box = 'puppetlabs/centos-7.0-64-nocm'
-  end
-end
-
 class CentOS72 < GuestOS
 
   def initialize
     @display_name = 'CentOS 7.2'
-    @platform = 'el-7-x86_64'
-    @box = 'puppetlabs/centos-7.2-64-nocm'
+    @box = 'bstopp/centos-7.2-x64'
   end
 end
 
-class Debian82 < GuestOS
+class Debian7 < GuestOS
 
   def initialize
-    @display_name = 'Debian 8.2'
-    @platform = 'debian-8-amd64'
-    @box = 'puppetlabs/debian-8.2-64-nocm'
+    @display_name = 'Debian 7'
+    @box = 'bstopp/debian-7-x64'
+  end
+end
+
+class Debian8 < GuestOS
+  def initialize
+    @display_name = 'Debian 8'
+    @box = 'bstopp/debian-8-x64'
   end
 end
 
 class Ubuntu14 < GuestOS
 
   def initialize
-    @display_name = 'Ubuntu 14.04'
-    @platform = 'ubuntu-1404-amd64'
-    @box = 'puppetlabs/ubuntu-14.04-64-nocm'
+    @display_name = 'Ubuntu 14 LTS'
+    @box = 'bstopp/ubuntu-14-x64'
   end
 end
 
+class Ubuntu16 < GuestOS
 
+  def initialize
+    @display_name = 'Ubuntu 16 LTS'
+    @box = 'bstopp/ubuntu-16-x64'
+  end
+end

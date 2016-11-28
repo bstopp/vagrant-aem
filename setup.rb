@@ -1,76 +1,50 @@
 #!/usr/bin/env ruby
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), 'lib'))
 
-require 'json'
+require 'optparse'
+require 'yaml'
+require 'fileutils'
+require 'ostruct'
 require 'erb'
-require_relative 'setup/options'
+require 'options/api'
 
-# Constants
+Dir[File.dirname(File.absolute_path(__FILE__)) + '/lib/options/*.rb'].each do |file|
+  require file
+end
 
-PROJECT_ROOT = File.expand_path(File.join(File.dirname(__FILE__)))
-SETUP_DIR = File.join(PROJECT_ROOT, 'setup')
-TEMPLATE_DIR = File.join(SETUP_DIR, 'templates')
+interactive = false
+defaults = false
+config = {}
 
-FILE_MODES = File::CREAT | File::TRUNC | File::WRONLY
-VAGRANT_FILE = 'Vagrantfile'
-PARAMS_FILE = File.join(SETUP_DIR, 'config.json')
+optparse = OptionParser.new do |opts|
+  opts.banner = 'Usage: setup.rb [options]'
 
-# Functions
+  opts.on('-cfgFILE', '--config-file=FILE', 'Existing YAML Config file, see docs for format.') do |file|
+    config = YAML.load_file(file)
+  end
 
-def readConfig(file)
+  opts.on('-i', '--interactive', 'Confirm any existing configurations, YAML or options.') do
+    interactive = true
+  end
 
-  if File.exist?(file)
-    contents = ''
-    File.open(file, File::RDONLY) do |f|
-      contents = f.read()
-    end
-    JSON.parse(contents)
+  opts.on('-d', '--defaults', 'Use all default value. Minimal prompting.') do
+    defaults = true
   end
 end
 
-def getConfig(cfg_file)
-  config = readConfig(cfg_file)
-  config = Hash.new unless config
-  config
+options = Array.new
+
+VagrantAem.constants.select do |c|
+  options << VagrantAem.const_get(c).new if VagrantAem.const_get(c) < VagrantAem::Option
 end
 
-def writeTemplate(tplfile, outfile, params, dest_dir = PROJECT_ROOT, mode = 0644)
+options.sort { |left, right| left.priority <=> right.priority }
 
-  tpl_data = OpenStruct.new(params)
-  template = File.read(File.join(TEMPLATE_DIR, "#{tplfile}.erb"))
-  renderer = ERB.new(template, nil, '<>')
-  File.open(File.join(dest_dir, outfile), FILE_MODES, mode) do |f|
-    f.write(renderer.result(tpl_data.instance_eval { binding }))
-  end
+options.each do |opt|
+  opt.options(optparse)
 end
 
-# Main Functionality
-
-cfg_file = ARGV.shift || PARAMS_FILE
-
-puts "CFG: #{cfg_file}"
-store = getConfig(cfg_file)
-
-puts "Current Store: #{store}"
-
-config_options = ConfigOptions.new
-config_options.confirm(store)
-config_options.prompt
-config_options.populate(store)
-
-puts store.to_json
-
-# Configure the OS Update rules
-
-# Configure the Ruby Update rules
-
-# Customize Vagrant options
-# CPU
-# Memory
-# Hostname
-
-
-# Create the Vagrant file
-
-writeTemplate(File.join(store[:provider], VAGRANT_FILE).to_s, VAGRANT_FILE, store)
-
-
+options.each do |opt|
+  opt.confirm if interactive
+  opt.prompt
+end
