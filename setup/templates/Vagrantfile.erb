@@ -10,6 +10,7 @@ Vagrant.configure('2') do |config|
     v.name = '<%= client %>-aem'
     v.cpus = 2
     v.memory = 8192
+    v.customize ["modifyvm", :id, "--ioapic", "on"]
   end
 
   config.vm.provision :shell, path: 'setup/update-vm.sh'
