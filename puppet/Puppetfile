@@ -21,7 +21,6 @@ mod 'puppetlabs/apache'
 # https://forge.puppetlabs.com/approved
 mod 'maestrodev/wget'
 mod 'rodjek/logrotate'
-mod 'rtyler/jenkins'
 
 mod 'bstopp-aem',
   :git => 'http://github.com/bstopp/puppet-aem.git'
