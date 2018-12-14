@@ -16,12 +16,12 @@ gem install librarian-puppet --no-document
 echo 'Puppet VM Provisioning: Installing puppet modules.'
 rm -Rf /vagrant/puppet/.librarian
 rm -Rf /vagrant/puppet/.tmp
-if [ -f /vagrant/puppet/Puppetfile.lock ]; then
+if [[ -f /vagrant/puppet/Puppetfile.lock ]]; then
   rm /vagrant/puppet/Puppetfile.lock
 fi
 
 # Cleaning old modules, just in case.
-if [ -e /vagrant/puppet/modules ]; then
+if [[ -e /vagrant/puppet/modules ]]; then
 	rm -Rf /vagrant/puppet/modules/*
 fi
 
