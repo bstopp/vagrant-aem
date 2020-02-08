@@ -8,7 +8,7 @@ forge "https://forgeapi.puppetlabs.com"
 
 # Puppet Supported Modules
 # https://forge.puppetlabs.com/supported
-mod 'puppetlabs/stdlib'
+mod 'puppetlabs/stdlib', '< 6.0.0'
 mod 'puppetlabs/firewall'
 mod 'puppetlabs/java'
 mod 'puppetlabs/apache'
